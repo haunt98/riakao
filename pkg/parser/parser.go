@@ -47,7 +47,7 @@ func (p *Parser) Parse() (expression.Expression, error) {
 	return p.parseExpression(0)
 }
 
-func (p *Parser) parseExpression(rbp int) (expression.Expression, error) {
+func (p *Parser) parseExpression(precedence int) (expression.Expression, error) {
 	tok, text := p.bs.Scan()
 	left, err := p.nullDenotation(tok, text)
 	if err != nil {
@@ -56,7 +56,7 @@ func (p *Parser) parseExpression(rbp int) (expression.Expression, error) {
 
 	for {
 		peekTok, _ := p.bs.Peek()
-		if rbp >= peekTok.Precedence() {
+		if precedence >= peekTok.Precedence() {
 			break
 		}
 
