@@ -55,3 +55,23 @@ func (tok Token) String() string {
 	}
 	return result
 }
+
+const (
+	LowestPrecedence = 0
+)
+
+var tokenPrecedences = map[Token]int{
+	Or:    LowestPrecedence + 1,
+	And:   LowestPrecedence + 2,
+	Equal: LowestPrecedence + 3,
+	In:    LowestPrecedence + 3,
+	Not:   LowestPrecedence + 4,
+}
+
+func (tok Token) Precedence() int {
+	result, ok := tokenPrecedences[tok]
+	if !ok {
+		return LowestPrecedence
+	}
+	return result
+}

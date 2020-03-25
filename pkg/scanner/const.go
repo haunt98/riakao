@@ -1,18 +1,19 @@
 package scanner
 
 const (
-	LeftParenthesis    = '('
-	RightParenthesis   = ')'
-	LeftCurlyBracket   = '{'
-	RightCurlyBracket  = '}'
-	LeftSquareBracket  = '['
-	RightSquareBracket = ']'
-	Comma              = ','
+	equalSign          = '='
+	leftParenthesis    = '('
+	rightParenthesis   = ')'
+	leftCurlyBracket   = '{'
+	rightCurlyBracket  = '}'
+	leftSquareBracket  = '['
+	rightSquareBracket = ']'
+	comma              = ','
 )
 
 const (
-	And = "and"
-	Or  = "or"
-	Not = "not"
-	In  = "in"
+	and = "and"
+	or  = "or"
+	not = "not"
+	in  = "in"
 )

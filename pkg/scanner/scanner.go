@@ -25,44 +25,46 @@ func (s *Scanner) Scan() (token.Token, string) {
 	ch := s.textScanner.Scan()
 	text := s.textScanner.TokenText()
 
-	var tok token.Token
 	switch ch {
 	case scanner.EOF:
-		tok = token.EOF
+		return token.EOF, text
 	case scanner.Ident:
 		switch strings.ToLower(text) {
-		case And:
-			tok = token.And
-		case Or:
-			tok = token.Or
-		case Not:
-			tok = token.Not
-		case In:
-			tok = token.In
+		case and:
+			return token.And, text
+		case or:
+			return token.Or, text
+		case not:
+			return token.Not, text
+		case in:
+			return token.In, text
 		default:
-			tok = token.Ident
+			return token.Ident, text
 		}
 	case scanner.Int:
-		tok = token.Int
+		return token.Int, text
 	case scanner.String:
-		tok = token.String
-	case LeftParenthesis:
-		tok = token.LeftParenthesis
-	case RightParenthesis:
-		tok = token.RightParenthesis
-	case LeftCurlyBracket:
-		tok = token.LeftCurlyBracket
-	case RightCurlyBracket:
-		tok = token.RightCurlyBracket
-	case LeftSquareBracket:
-		tok = token.LeftSquareBracket
-	case RightSquareBracket:
-		tok = token.RightSquareBracket
-	case Comma:
-		tok = token.Comma
+		return token.String, text
+	case equalSign:
+		if expect := s.textScanner.Scan(); expect != equalSign {
+			return token.Illegal, text + s.textScanner.TokenText()
+		}
+		return token.Equal, text + s.textScanner.TokenText()
+	case leftParenthesis:
+		return token.LeftParenthesis, text
+	case rightParenthesis:
+		return token.RightParenthesis, text
+	case leftCurlyBracket:
+		return token.LeftCurlyBracket, text
+	case rightCurlyBracket:
+		return token.RightCurlyBracket, text
+	case leftSquareBracket:
+		return token.LeftSquareBracket, text
+	case rightSquareBracket:
+		return token.RightSquareBracket, text
+	case comma:
+		return token.Comma, text
 	default:
-		tok = token.Illegal
+		return token.Illegal, text
 	}
-
-	return tok, text
 }
