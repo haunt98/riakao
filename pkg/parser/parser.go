@@ -47,11 +47,12 @@ func (p *Parser) Parse() (expression.Expression, error) {
 	return p.parseExpression(0)
 }
 
-func (p *Parser) parseExpression(precedence int) (expression.Expression, error) {
+func (p *Parser) parseExpression(precedence int) (result expression.Expression, err error) {
 	tok, text := p.bs.Scan()
-	left, err := p.nullDenotation(tok, text)
+
+	result, err = p.nullDenotation(tok, text)
 	if err != nil {
-		return expression.Expression{}, err
+		return
 	}
 
 	for {
@@ -61,13 +62,13 @@ func (p *Parser) parseExpression(precedence int) (expression.Expression, error) 
 		}
 
 		tok, text = p.bs.Scan()
-		left, err = p.leftDenotation(tok, text, left)
+		result, err = p.leftDenotation(tok, text, result)
 		if err != nil {
-			return expression.Expression{}, err
+			return
 		}
 	}
 
-	return left, nil
+	return
 }
 
 func (p *Parser) nullDenotation(tok token.Token, text string) (expression.Expression, error) {
@@ -173,7 +174,7 @@ func (p *Parser) nudCurlyBracket(tok token.Token, _ string) (result expression.E
 }
 
 func (p *Parser) nudSquareBracket(tok token.Token, _ string) (result expression.Expression, err error) {
-	expr := expression.Expression{
+	result = expression.Expression{
 		Token:    tok,
 		Value:    nil,
 		Children: nil,
@@ -190,7 +191,7 @@ func (p *Parser) nudSquareBracket(tok token.Token, _ string) (result expression.
 		if err != nil {
 			return
 		}
-		expr.Children = append(expr.Children, child)
+		result.Children = append(result.Children, child)
 
 		peekTok, _ = p.bs.Peek()
 		if peekTok != token.Comma {
@@ -206,7 +207,6 @@ func (p *Parser) nudSquareBracket(tok token.Token, _ string) (result expression.
 		return
 	}
 
-	result = expr
 	return
 }
 
