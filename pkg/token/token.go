@@ -16,36 +16,36 @@ const (
 	In
 	Equal
 
-	LeftParenthesis    // (
-	RightParenthesis   // )
-	LeftCurlyBracket   // {
-	RightCurlyBracket  // }
-	LeftSquareBracket  // [
-	RightSquareBracket // ]
-	Comma              // ,
+	LeftParenthesis
+	RightParenthesis
+	LeftCurlyBracket
+	RightCurlyBracket
+	LeftSquareBracket
+	RightSquareBracket
+	Comma
 )
 
 var tokenStrings = map[Token]string{
-	Illegal: "Illegal",
+	Illegal: "illegal",
 	EOF:     "EOF",
 
-	Ident:  "Ident",
-	Int:    "Int",
-	String: "String",
+	Ident:  "ident",
+	Int:    "int",
+	String: "string",
 
-	And:   "And",
-	Or:    "Or",
-	Not:   "Not",
-	In:    "In",
-	Equal: "Equal",
+	And:   "and",
+	Or:    "or",
+	Not:   "not",
+	In:    "in",
+	Equal: "==",
 
-	LeftParenthesis:    "LeftParenthesis",
-	RightParenthesis:   "RightParenthesis",
-	LeftCurlyBracket:   "LeftCurlyBracket",
-	RightCurlyBracket:  "RightCurlyBracket",
-	LeftSquareBracket:  "LeftSquareBracket",
-	RightSquareBracket: "RightSquareBracket",
-	Comma:              "Comma",
+	LeftParenthesis:    "(",
+	RightParenthesis:   ")",
+	LeftCurlyBracket:   "{",
+	RightCurlyBracket:  "}",
+	LeftSquareBracket:  "[",
+	RightSquareBracket: "]",
+	Comma:              ",",
 }
 
 func (tok Token) String() string {
@@ -56,22 +56,19 @@ func (tok Token) String() string {
 	return result
 }
 
-const (
-	LowestPrecedence = 0
-)
-
+// https://en.wikipedia.org/wiki/Order_of_operations
 var tokenPrecedences = map[Token]int{
-	Or:    LowestPrecedence + 1,
-	And:   LowestPrecedence + 2,
-	Equal: LowestPrecedence + 3,
-	In:    LowestPrecedence + 3,
-	Not:   LowestPrecedence + 4,
+	Or:    1,
+	And:   2,
+	Equal: 3,
+	In:    3,
+	Not:   4,
 }
 
 func (tok Token) Precedence() int {
 	result, ok := tokenPrecedences[tok]
 	if !ok {
-		return LowestPrecedence
+		return 0
 	}
 	return result
 }

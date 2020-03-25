@@ -30,13 +30,13 @@ func (s *Scanner) Scan() (token.Token, string) {
 		return token.EOF, text
 	case scanner.Ident:
 		switch strings.ToLower(text) {
-		case and:
+		case token.And.String():
 			return token.And, text
-		case or:
+		case token.Or.String():
 			return token.Or, text
-		case not:
+		case token.Not.String():
 			return token.Not, text
-		case in:
+		case token.In.String():
 			return token.In, text
 		default:
 			return token.Ident, text
@@ -45,24 +45,24 @@ func (s *Scanner) Scan() (token.Token, string) {
 		return token.Int, text
 	case scanner.String:
 		return token.String, text
-	case equalSign:
-		if expect := s.textScanner.Scan(); expect != equalSign {
+	case '=':
+		if expect := s.textScanner.Scan(); expect != '=' {
 			return token.Illegal, text + s.textScanner.TokenText()
 		}
 		return token.Equal, text + s.textScanner.TokenText()
-	case leftParenthesis:
+	case '(':
 		return token.LeftParenthesis, text
-	case rightParenthesis:
+	case ')':
 		return token.RightParenthesis, text
-	case leftCurlyBracket:
+	case '{':
 		return token.LeftCurlyBracket, text
-	case rightCurlyBracket:
+	case '}':
 		return token.RightCurlyBracket, text
-	case leftSquareBracket:
+	case '[':
 		return token.LeftSquareBracket, text
-	case rightSquareBracket:
+	case ']':
 		return token.RightSquareBracket, text
-	case comma:
+	case ',':
 		return token.Comma, text
 	default:
 		return token.Illegal, text
