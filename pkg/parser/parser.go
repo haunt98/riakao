@@ -12,8 +12,8 @@ import (
 
 type Parser struct {
 	bs     *scanner.BufferScanner
-	nudFns map[token.Token]nudFn
-	ledFns map[token.Token]ledFn
+	nudFns map[token.Token]nudFn // nud short for null denotation
+	ledFns map[token.Token]ledFn // led short for left denotation
 }
 
 type nudFn func(token.Token, string) (expression.Expression, error)
@@ -29,9 +29,9 @@ func NewParser(bs *scanner.BufferScanner) *Parser {
 		token.Int:               p.nudInt,
 		token.String:            p.nudString,
 		token.Not:               p.nudNot,
-		token.LeftParenthesis:   p.nudLeftParenthesis,
-		token.LeftCurlyBracket:  p.nudLeftCurlyBracket,
-		token.LeftSquareBracket: p.nudLeftSquareBracket,
+		token.LeftParenthesis:   p.nudParenthesis,
+		token.LeftCurlyBracket:  p.nudCurlyBracket,
+		token.LeftSquareBracket: p.nudSquareBracket,
 	}
 	p.ledFns = map[token.Token]ledFn{
 		token.And:   p.ledInfix,
@@ -128,7 +128,7 @@ func (p *Parser) nudNot(tok token.Token, _ string) (result expression.Expression
 	return
 }
 
-func (p *Parser) nudLeftParenthesis(tok token.Token, _ string) (result expression.Expression, err error) {
+func (p *Parser) nudParenthesis(tok token.Token, _ string) (result expression.Expression, err error) {
 	var expr expression.Expression
 	expr, err = p.parseExpression(0)
 	if err != nil {
@@ -150,7 +150,7 @@ func (p *Parser) nudLeftParenthesis(tok token.Token, _ string) (result expressio
 	return
 }
 
-func (p *Parser) nudLeftCurlyBracket(tok token.Token, _ string) (result expression.Expression, err error) {
+func (p *Parser) nudCurlyBracket(tok token.Token, _ string) (result expression.Expression, err error) {
 	var expr expression.Expression
 	expr, err = p.parseExpression(0)
 	if err != nil {
@@ -172,7 +172,7 @@ func (p *Parser) nudLeftCurlyBracket(tok token.Token, _ string) (result expressi
 	return
 }
 
-func (p *Parser) nudLeftSquareBracket(tok token.Token, _ string) (result expression.Expression, err error) {
+func (p *Parser) nudSquareBracket(tok token.Token, _ string) (result expression.Expression, err error) {
 	expr := expression.Expression{
 		Token:    tok,
 		Value:    nil,
